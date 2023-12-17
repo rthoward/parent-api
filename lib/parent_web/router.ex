@@ -12,6 +12,7 @@ defmodule ParentWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug OpenApiSpex.Plug.PutApiSpec, module: ParentWeb.ApiSpec
   end
 
   scope "/", ParentWeb do
@@ -25,6 +26,11 @@ defmodule ParentWeb.Router do
     pipe_through :api
 
     resources "/children", ChildController
+  end
+
+  scope "/api" do
+    pipe_through :api
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
