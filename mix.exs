@@ -51,7 +51,8 @@ defmodule Parent.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
-      {:ex_machina, "~> 2.7.0"}
+      {:ex_machina, "~> 2.7.0"},
+      {:jsonapi, "~> 1.6.3"}
     ]
   end
 
