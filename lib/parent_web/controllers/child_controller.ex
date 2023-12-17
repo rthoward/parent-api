@@ -1,14 +1,26 @@
 defmodule ParentWeb.ChildController do
   use ParentWeb, :controller
+  use OpenApiSpex.ControllerSpecs
 
   alias Parent.Families.Children
   alias Parent.Families.Children.Child
 
+  alias ParentWeb.ChildSchema
+
   action_fallback ParentWeb.FallbackController
+
+  tags ["children"]
 
   plug JSONAPI.QueryParser,
     filter: ~w(family_id),
     view: ParentWeb.ChildView
+
+  operation :index,
+    summary: "List children",
+    parameters: [],
+    responses: [
+      ok: {"Children response", "application/json", ChildSchema.ChildrenResponse}
+    ]
 
   def index(conn, _params) do
     children = Children.list_children()
