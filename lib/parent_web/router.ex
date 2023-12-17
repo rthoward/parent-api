@@ -28,6 +28,12 @@ defmodule ParentWeb.Router do
     resources "/children", ChildController
   end
 
+  scope "/" do
+    pipe_through :browser
+
+    get "/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
+  end
+
   scope "/api" do
     pipe_through :api
     get "/openapi", OpenApiSpex.Plug.RenderSpec, []
