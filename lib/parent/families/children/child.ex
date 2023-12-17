@@ -14,7 +14,7 @@ defmodule Parent.Families.Children.Child do
 
   def changeset(child, attrs) do
     child
-    |> cast(attrs, [@fields])
-    |> validate_required([@fields])
+    |> cast(attrs, @fields)
+    |> validate_required(@fields)
   end
 end

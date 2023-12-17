@@ -3,7 +3,7 @@ defmodule ParentWeb.ChildControllerTest do
 
   import Parent.FamiliesFixtures
 
-  alias Parent.Families.Child
+  alias Parent.Families.Children.Child
 
   @create_attrs %{
     first_name: "some first_name"

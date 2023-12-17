@@ -23,6 +23,7 @@ defmodule Parent.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Parent.Factory
       import Parent.DataCase
     end
   end

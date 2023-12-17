@@ -27,6 +27,7 @@ defmodule ParentWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
+      import Parent.Factory
       import ParentWeb.ConnCase
     end
   end
