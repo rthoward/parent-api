@@ -21,9 +21,11 @@ defmodule ParentWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", ParentWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ParentWeb do
+    pipe_through :api
+
+    resources "/children", ChildController
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:parent, :dev_routes) do
