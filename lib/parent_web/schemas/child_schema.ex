@@ -5,8 +5,6 @@ defmodule ParentWeb.ChildSchema do
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      # The title is optional. It defaults to the last section of the module name.
-      # So the derived title for MyApp.User is "User".
       title: "Child",
       description: "A child",
       type: :object,
