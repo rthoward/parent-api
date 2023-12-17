@@ -40,28 +40,34 @@ defmodule ParentWeb.ChildController do
   end
 
   def show(conn, %{"id" => id}) do
-    child = Children.get_child!(id)
-
-    conn
-    |> put_view(ParentWeb.ChildView)
-    |> render("show.json", %{data: child})
-  end
-
-  def update(conn, %{"id" => id, "child" => child_params}) do
-    child = Children.get_child!(id)
-
-    with {:ok, %Child{} = child} <- Children.update_child(child, child_params) do
+    with %Child{} = child <- Children.get_child(id) do
       conn
       |> put_view(ParentWeb.ChildView)
       |> render("show.json", %{data: child})
+    else
+      _ -> {:error, :not_found}
+    end
+  end
+
+  def update(conn, %{"id" => id, "child" => child_params}) do
+    with %Child{} = child <- Children.get_child(id),
+         {:ok, updated_child} <- Children.update_child(child, child_params) do
+      conn
+      |> put_view(ParentWeb.ChildView)
+      |> render("show.json", %{data: updated_child})
+    else
+      nil -> {:error, :not_found}
+      e -> e
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    child = Children.get_child!(id)
-
-    with {:ok, %Child{}} <- Children.delete_child(child) do
+    with %Child{} = child <- Children.get_child(id),
+         {:ok, %Child{}} <- Children.delete_child(child) do
       send_resp(conn, :no_content, "")
+    else
+      nil -> {:error, :not_found}
+      e -> e
     end
   end
 end

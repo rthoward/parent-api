@@ -31,6 +31,8 @@ defmodule Parent.Families.Children do
   """
   def get_child!(id), do: Repo.get!(Child, id)
 
+  def get_child(id), do: Repo.get(Child, id)
+
   @doc """
   Creates a child.
 
