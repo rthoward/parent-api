@@ -22,7 +22,7 @@ config :parent, ParentWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
-  debug_errors: true,
+  debug_errors: false,
   secret_key_base: "KrYbvFhmFWa4QzS9z09fiCmxxj2uibuIz8Qglc3wfNSDJHP++rrP3Gr/WfMQPSt1",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
