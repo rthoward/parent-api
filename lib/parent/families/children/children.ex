@@ -1,4 +1,6 @@
 defmodule Parent.Families.Children do
+  import Ecto.Query
+
   alias Parent.Repo
   alias Parent.Families.Children.Child
 
@@ -11,8 +13,10 @@ defmodule Parent.Families.Children do
       [%Child{}, ...]
 
   """
-  def list_children do
-    Repo.all(Child)
+  def list_children(preloads \\ []) do
+    Child
+    |> preload(^preloads)
+    |> Repo.all()
   end
 
   @doc """
@@ -29,9 +33,17 @@ defmodule Parent.Families.Children do
       ** (Ecto.NoResultsError)
 
   """
-  def get_child!(id), do: Repo.get!(Child, id)
+  def get_child!(id, preloads \\ []) do
+    Child
+    |> preload(^preloads)
+    |> Repo.get!(id)
+  end
 
-  def get_child(id), do: Repo.get(Child, id)
+  def get_child(id, preloads \\ []) do
+    Child
+    |> preload(^preloads)
+    |> Repo.get(id)
+  end
 
   @doc """
   Creates a child.

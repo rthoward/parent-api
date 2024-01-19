@@ -8,6 +8,7 @@ defmodule Parent.Families.Children.Child do
     field :birthday, :date
 
     belongs_to :family, Parent.Families.Family
+    has_many :parents, through: [:family, :parents]
 
     timestamps(type: :utc_datetime)
   end

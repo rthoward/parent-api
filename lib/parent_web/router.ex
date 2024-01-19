@@ -26,6 +26,7 @@ defmodule ParentWeb.Router do
     pipe_through :api
 
     resources "/children", ChildController
+    resources "/families", FamilyController
   end
 
   scope "/" do

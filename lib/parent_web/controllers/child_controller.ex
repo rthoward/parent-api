@@ -13,6 +13,7 @@ defmodule ParentWeb.ChildController do
 
   plug JSONAPI.QueryParser,
     filter: ~w(family_id),
+    include: ~w(family),
     view: ParentWeb.ChildView
 
   operation :index,
@@ -40,12 +41,18 @@ defmodule ParentWeb.ChildController do
   end
 
   def show(conn, %{"id" => id}) do
-    with %Child{} = child <- Children.get_child(id) do
-      conn
-      |> put_view(ParentWeb.ChildView)
-      |> render("show.json", %{data: child})
-    else
-      _ -> {:error, :not_found}
+    preloads = conn.assigns.jsonapi_query.include
+
+    id
+    |> Children.get_child(preloads)
+    |> case do
+      %Child{} = child ->
+        conn
+        |> put_view(ParentWeb.ChildView)
+        |> render("show.json", %{data: child})
+
+      _ ->
+        {:error, :not_found}
     end
   end
 

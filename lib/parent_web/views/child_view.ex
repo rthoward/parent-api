@@ -3,5 +3,5 @@ defmodule ParentWeb.ChildView do
 
   def fields, do: [:first_name, :last_name, :birthday]
   def meta(_data, _conn), do: %{}
-  def relationships, do: []
+  def relationships, do: [family: ParentWeb.FamilyView]
 end
