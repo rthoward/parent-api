@@ -1,27 +1,28 @@
 defmodule ParentWeb.ChildController do
   use ParentWeb, :controller
-  use OpenApiSpex.ControllerSpecs
 
   alias Parent.Families.Children
   alias Parent.Families.Children.Child
 
-  alias ParentWeb.ChildSchema
-
   action_fallback ParentWeb.FallbackController
+  defmodule View do
+    def render("show.json", %{data: child} = assigns) do
+      IO.inspect(child)
 
-  tags ["children"]
+      %{
+        id: to_string(child.id),
+        type: "child",
+        first_name: child.first_name,
+        last_name: child.last_name,
+        birthday: child.birthday,
+        family: render_expandable(child, :family)
+      }
+    end
 
-  plug JSONAPI.QueryParser,
-    filter: ~w(family_id),
-    include: ~w(family),
-    view: ParentWeb.ChildView
-
-  operation :index,
-    summary: "List children",
-    parameters: [],
-    responses: [
-      ok: {"Children response", "application/json", ChildSchema.ChildrenResponse}
-    ]
+    defp render_expandable(relation) do
+      :foo
+    end
+  end
 
   def index(conn, _params) do
     children = Children.list_children()
@@ -40,15 +41,15 @@ defmodule ParentWeb.ChildController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    preloads = conn.assigns.jsonapi_query.include
+  def show(conn, %{"id" => id} = params) do
+    api_query = conn.assigns.api_query |> IO.inspect()
 
     id
-    |> Children.get_child(preloads)
+    |> Children.get_child(api_query.expand)
     |> case do
       %Child{} = child ->
         conn
-        |> put_view(ParentWeb.ChildView)
+        |> put_view(View)
         |> render("show.json", %{data: child})
 
       _ ->

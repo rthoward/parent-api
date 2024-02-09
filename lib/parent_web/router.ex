@@ -13,6 +13,7 @@ defmodule ParentWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug OpenApiSpex.Plug.PutApiSpec, module: ParentWeb.ApiSpec
+    plug ParentWeb.Plugs.QueryParser
   end
 
   scope "/", ParentWeb do
