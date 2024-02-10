@@ -11,11 +11,6 @@ defmodule ParentWeb.ChildController do
 
   tags ["children"]
 
-  plug JSONAPI.QueryParser,
-    filter: ~w(family_id),
-    include: ~w(family),
-    view: ParentWeb.ChildView
-
   operation :index,
     summary: "List children",
     parameters: [],
@@ -25,51 +20,41 @@ defmodule ParentWeb.ChildController do
 
   def index(conn, _params) do
     children = Children.list_children()
-
-    conn
-    |> put_view(ParentWeb.ChildView)
-    |> render("show.json", %{data: children})
+    render(conn, :index, %{children: children})
   end
 
   def create(conn, %{"child" => child_params}) do
     with {:ok, child} <- Children.create_child(child_params) do
       conn
       |> put_status(:created)
-      |> put_view(ParentWeb.ChildView)
-      |> render("show.json", %{data: child})
+      |> render(:show, %{child: child})
     end
   end
 
   def show(conn, %{"id" => id}) do
-    preloads = conn.assigns.jsonapi_query.include
+    preloads = []
 
     id
     |> Children.get_child(preloads)
     |> case do
-      %Child{} = child ->
-        conn
-        |> put_view(ParentWeb.ChildView)
-        |> render("show.json", %{data: child})
-
-      _ ->
-        {:error, :not_found}
+      %Child{} = child -> render(conn, :show, %{child: child})
+      _ -> {:error, :not_found}
     end
   end
 
   def update(conn, %{"id" => id, "child" => child_params}) do
-    with %Child{} = child <- Children.get_child(id),
+    with {_, %Child{} = child} <- {:get_child, Children.get_child(id)},
          {:ok, updated_child} <- Children.update_child(child, child_params) do
       conn
-      |> put_view(ParentWeb.ChildView)
-      |> render("show.json", %{data: updated_child})
+      |> render(:show, %{data: updated_child})
     else
-      nil -> {:error, :not_found}
+      {:get_child, nil} -> {:error, :not_found}
       e -> e
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    with %Child{} = child <- Children.get_child(id),
+    with {_, %Child{} = child} <- {:get_child, Children.get_child(id)},
          {:ok, %Child{}} <- Children.delete_child(child) do
       send_resp(conn, :no_content, "")
     else

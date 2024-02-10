@@ -8,21 +8,13 @@ defmodule ParentWeb.FamilyController do
 
   tags ["families"]
 
-  plug JSONAPI.QueryParser,
-    include: ~w(children parents),
-    view: ParentWeb.FamilyView
-
   def show(conn, %{"id" => id}) do
-    preloads = conn.assigns.jsonapi_query.include
+    preloads = [:children, :parents]
 
     id
     |> Families.get_family(preloads)
     |> case do
-      %Families.Family{} = family ->
-      conn
-      |> put_view(ParentWeb.FamilyView)
-      |> render("show.json", %{data: family})
-
+      %Families.Family{} = family -> render(conn, :show, %{family: family})
       _ -> {:error, :not_found}
     end
   end
