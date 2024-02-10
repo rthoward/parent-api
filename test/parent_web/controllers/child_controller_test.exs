@@ -29,6 +29,22 @@ defmodule ParentWeb.ChildControllerTest do
                |> get(~p"/api/children/#{child}")
                |> json_response(200)
     end
+
+    test "doesn't return family by default", %{conn: conn, child: child} do
+      assert response_json =
+               conn
+               |> get(~p"/api/children/#{child}")
+               |> json_response(200)
+
+      refute response_json["data"]["family"]
+    end
+
+    test "can expand `family`", %{conn: conn, child: %Child{family_id: family_id} = child} do
+      assert %{"data" => %{"family_id" => ^family_id, "family" => %{"id" => ^family_id}}} =
+               conn
+               |> get(~p"/api/children/#{child}", %{expand: ["family.parents", "family.children"]})
+               |> json_response(200)
+    end
   end
 
   describe "create child" do
@@ -97,6 +113,6 @@ defmodule ParentWeb.ChildControllerTest do
   end
 
   defp create_child(_) do
-    %{child: insert(:child)}
+    %{child: insert(:child, family: build(:family))}
   end
 end

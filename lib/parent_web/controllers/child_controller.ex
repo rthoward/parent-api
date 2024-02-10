@@ -6,10 +6,13 @@ defmodule ParentWeb.ChildController do
   alias Parent.Families.Children.Child
 
   alias ParentWeb.ChildSchema
+  alias ParentWeb.Helpers
 
   action_fallback ParentWeb.FallbackController
 
   tags ["children"]
+
+  @allowed_preloads [family: [:children, :parents]]
 
   operation :index,
     summary: "List children",
@@ -32,7 +35,7 @@ defmodule ParentWeb.ChildController do
   end
 
   def show(conn, %{"id" => id}) do
-    preloads = []
+    preloads = Helpers.Preloads.parse(conn, @allowed_preloads)
 
     id
     |> Children.get_child(preloads)

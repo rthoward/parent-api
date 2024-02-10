@@ -8,4 +8,8 @@ defmodule Parent.Factory do
       birthday: ~D[2023-12-16]
     }
   end
+
+  def family_factory do
+    %Parent.Families.Family{}
+  end
 end
