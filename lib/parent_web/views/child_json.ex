@@ -1,6 +1,5 @@
 defmodule ParentWeb.ChildJSON do
   alias Parent.Families.Children.Child
-  alias Parent.Families.Family
 
   def index(%{children: children}) do
     %{data: for(child <- children, do: data(child))}
@@ -19,11 +18,14 @@ defmodule ParentWeb.ChildJSON do
       last_name: child.last_name,
       birthday: child.birthday
     }
-    |> expand(:family, child.family)
+    |> ParentWeb.FamilyJSON.expand(:family, child.family)
   end
 
-  defp expand(data, :family, %Family{} = family),
-    do: Map.put(data, :family, ParentWeb.FamilyJSON.data(family))
+  def expand(data, key, %Child{} = child),
+    do: Map.put(data, key, data(child))
 
-  defp expand(data, _child, _), do: data
+  def expand(data, key, [%Child{} | _] = children),
+    do: Map.put(data, key, Enum.map(children, &data/1))
+
+  def expand(data, _, _), do: data
 end

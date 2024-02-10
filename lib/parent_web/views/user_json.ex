@@ -1,6 +1,5 @@
 defmodule ParentWeb.UserJSON do
   alias Parent.Families.Users.User
-  alias Parent.Families.Family
 
   def data(%User{} = user) do
     %{
@@ -11,11 +10,14 @@ defmodule ParentWeb.UserJSON do
       email: user.email,
       family_id: user.family_id
     }
-    |> expand(:family, user.family)
+    |> ParentWeb.FamilyJSON.expand(:family, user.family)
   end
 
-  defp expand(data, :family, %Family{} = family),
-    do: Map.put(data, :family, ParentWeb.FamilyJSON.data(family))
+  def expand(data, key, %User{} = user),
+    do: Map.put(data, key, data(user))
 
-  defp expand(data, _, _), do: data
+  def expand(data, key, [%User{} | _] = users),
+    do: Map.put(data, key, Enum.map(users, &data/1))
+
+  def expand(data, _, _), do: data
 end

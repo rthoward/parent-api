@@ -10,15 +10,11 @@ defmodule ParentWeb.FamilyJSON do
       type: :family,
       id: family.id
     }
-    |> expand(:parents, family.parents)
-    |> expand(:children, family.children)
+    |> ParentWeb.UserJSON.expand(:parents, family.parents)
+    |> ParentWeb.ChildJSON.expand(:children, family.children)
   end
 
-  defp expand(data, :parents, [_ | _] = parents),
-    do: Map.put(data, :parents, Enum.map(parents, &ParentWeb.UserJSON.data/1))
+  def expand(data, key, %Family{} = family), do: Map.put(data, key, data(family))
 
-  defp expand(data, :children, [_ | _] = children),
-    do: Map.put(data, :children, Enum.map(children, &ParentWeb.ChildJSON.data/1))
-
-  defp expand(data, _, _), do: data
+  def expand(data, _key, _), do: data
 end
