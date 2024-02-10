@@ -10,31 +10,47 @@ defmodule ParentWeb.ChildControllerTest do
   end
 
   describe "index" do
-    test "lists all children", %{conn: conn} do
-      child = insert(:child)
-      child_id = to_string(child.id)
+    setup [:create_child]
 
-      conn = get(conn, ~p"/api/children")
-      assert [%{"id" => ^child_id}] = json_response(conn, 200)["data"]
+    test "lists all children", %{conn: conn, child: %Child{id: id}} do
+      assert %{"data" => [%{"id" => ^id}]} =
+               conn
+               |> get(~p"/api/children")
+               |> json_response(200)
+    end
+  end
+
+  describe "show" do
+    setup [:create_child]
+
+    test "shows a child", %{conn: conn, child: %Child{id: id} = child} do
+      assert %{"data" => %{"id" => ^id}} =
+               conn
+               |> get(~p"/api/children/#{child}")
+               |> json_response(200)
     end
   end
 
   describe "create child" do
     test "renders child when data is valid", %{conn: conn} do
       create_attrs = string_params_for(:child)
-      conn = post(conn, ~p"/api/children", child: create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, ~p"/api/children/#{id}")
+      assert %{"data" => %{"id" => id}} =
+               conn
+               |> post(~p"/api/children", child: create_attrs)
+               |> json_response(201)
 
       assert %{
-               "id" => ^id,
-               "attributes" => %{
+               "data" => %{
+                 "id" => ^id,
                  "first_name" => _,
                  "last_name" => _,
                  "birthday" => _
                }
-             } = json_response(conn, 200)["data"]
+             } =
+               conn
+               |> get(~p"/api/children/#{id}")
+               |> json_response(200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -47,34 +63,36 @@ defmodule ParentWeb.ChildControllerTest do
     setup [:create_child]
 
     test "renders child when data is valid", %{conn: conn, child: %Child{id: id} = child} do
-      update_attrs = string_params_for(:child)
-      conn = put(conn, ~p"/api/children/#{child}", child: update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      update_attrs = %{"first_name" => "updated"}
 
-      conn = get(conn, ~p"/api/children/#{id}")
+      assert %{"data" => %{"id" => ^id}} =
+               conn
+               |> put(~p"/api/children/#{child}", child: update_attrs)
+               |> json_response(200)
 
       assert %{
-               "id" => ^id,
-               "first_name" => "some updated first_name"
-             } = json_response(conn, 200)["data"]
+               "data" => %{
+                 "id" => ^id,
+                 "first_name" => "updated"
+               }
+             } =
+               conn
+               |> get(~p"/api/children/#{id}")
+               |> json_response(200)
     end
-
-    # test "renders errors when data is invalid", %{conn: conn, child: child} do
-    #   conn = put(conn, ~p"/api/children/#{child}", child: @invalid_attrs)
-    #   assert json_response(conn, 422)["errors"] != %{}
-    # end
   end
 
   describe "delete child" do
     setup [:create_child]
 
     test "deletes chosen child", %{conn: conn, child: child} do
-      conn = delete(conn, ~p"/api/children/#{child}")
-      assert response(conn, 204)
+      assert conn
+             |> delete(~p"/api/children/#{child}")
+             |> response(204)
 
-      assert_error_sent 404, fn ->
-        get(conn, ~p"/api/children/#{child}")
-      end
+      assert conn
+             |> get(~p"/api/children/#{child}")
+             |> response(404)
     end
   end
 

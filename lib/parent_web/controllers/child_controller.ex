@@ -46,7 +46,7 @@ defmodule ParentWeb.ChildController do
     with {_, %Child{} = child} <- {:get_child, Children.get_child(id)},
          {:ok, updated_child} <- Children.update_child(child, child_params) do
       conn
-      |> render(:show, %{data: updated_child})
+      |> render(:show, %{child: updated_child})
     else
       {:get_child, nil} -> {:error, :not_found}
       e -> e
