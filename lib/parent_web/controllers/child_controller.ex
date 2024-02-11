@@ -35,7 +35,7 @@ defmodule ParentWeb.ChildController do
   end
 
   def show(conn, %{"id" => id}) do
-    preloads = Helpers.Preloads.parse(conn, @allowed_preloads)
+    preloads = Helpers.Preloads.from_conn(conn, @allowed_preloads)
 
     id
     |> Children.get_child(preloads)
