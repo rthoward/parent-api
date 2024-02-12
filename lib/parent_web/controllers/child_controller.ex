@@ -14,7 +14,6 @@ defmodule ParentWeb.ChildController do
 
   operation :index,
     summary: "List children",
-    parameters: [],
     responses: [
       ok: {"Children response", "application/json", ChildSchema.ChildrenResponse}
     ]
@@ -24,6 +23,13 @@ defmodule ParentWeb.ChildController do
     render(conn, :index, %{children: children})
   end
 
+  operation :create,
+    summary: "Create a child",
+    request_body: {"Child params", "application/json", ChildSchema.ChildParams},
+    responses: [
+      ok: {"Child response", "application/json", ChildSchema.ChildrenResponse}
+    ]
+
   def create(conn, %{"child" => child_params}) do
     with {:ok, child} <- Children.create_child(child_params) do
       conn
@@ -31,6 +37,12 @@ defmodule ParentWeb.ChildController do
       |> render(:show, %{child: child})
     end
   end
+
+  operation :show,
+    summary: "Get a child",
+    responses: [
+      ok: {"Child response", "application/json", ChildSchema.ChildResponse}
+    ]
 
   def show(conn, %{"id" => id}) do
     preloads = Helpers.Preloads.from_conn(conn, @allowed_preloads)
@@ -43,6 +55,14 @@ defmodule ParentWeb.ChildController do
     end
   end
 
+  operation :update,
+    summary: "Update a child",
+    parameters: [id: [in: :path, type: :integer, example: 1]],
+    request_body: {"Child params", "application/json", ChildSchema.ChildParams},
+    responses: [
+      ok: {"Child response", "application/json", ChildSchema.ChildrenResponse}
+    ]
+
   def update(conn, %{"id" => id, "child" => child_params}) do
     with {_, %Child{} = child} <- {:get_child, Children.get_child(id)},
          {:ok, updated_child} <- Children.update_child(child, child_params) do
@@ -53,6 +73,10 @@ defmodule ParentWeb.ChildController do
       e -> e
     end
   end
+
+  operation :delete,
+    summary: "Delete a child",
+    parameters: [id: [in: :path, type: :integer, example: 1]]
 
   def delete(conn, %{"id" => id}) do
     with {_, %Child{} = child} <- {:get_child, Children.get_child(id)},

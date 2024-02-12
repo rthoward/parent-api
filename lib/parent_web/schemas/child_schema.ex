@@ -28,6 +28,28 @@ defmodule ParentWeb.ChildSchema do
     })
   end
 
+  defmodule ChildParams do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "Child params",
+      type: :object,
+      properties: %{
+        first_name: %Schema{type: :string},
+        last_: %Schema{type: :string},
+        birthday: %Schema{type: :string, format: :date},
+        inserted_at: %Schema{type: :string, format: :"date-time"},
+        updated_at: %Schema{type: :string, format: :"date-time"}
+      },
+      required: [:first_name, :last_name, :birthday],
+      example: %{
+        "first_name" => "Ronnie",
+        "last_name" => "McDonnie",
+        "birthday" => "1970-01-01T12:34:55Z",
+      }
+    })
+  end
+
   defmodule ChildResponse do
     require OpenApiSpex
 
