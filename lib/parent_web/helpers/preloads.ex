@@ -17,22 +17,20 @@ defmodule ParentWeb.Helpers.Preloads do
     |> allow(allowed_preloads)
   end
 
-  @doc """
-    Converts preloads into their canonical form.
+    # Converts preloads into their canonical form.
 
-    Ex:
-      normalize(cyan: [:teal, :turquoise])
-      [cyan: [teal: [], turquoise: []]]
-  """
+    # Ex:
+    #   normalize(cyan: [:teal, :turquoise])
+    #   [cyan: [teal: [], turquoise: []]]
   @spec normalize(keyword()) :: keyword()
-  def normalize(preloads) when is_list(preloads), do: Enum.map(preloads, &normalize/1)
-  def normalize({key, value}) when is_list(value), do: {key, normalize(value)}
-  def normalize({key, value}), do: {key, [normalize(value)]}
-  def normalize(value) when is_atom(value), do: {value, []}
-  def normalize(value), do: raise("Invalid preload value #{inspect(value)}")
+  defp normalize(preloads) when is_list(preloads), do: Enum.map(preloads, &normalize/1)
+  defp normalize({key, value}) when is_list(value), do: {key, normalize(value)}
+  defp normalize({key, value}), do: {key, [normalize(value)]}
+  defp normalize(value) when is_atom(value), do: {value, []}
+  defp normalize(value), do: raise("Invalid preload value #{inspect(value)}")
 
   @spec allow(preloads(), preloads()) :: preloads()
-  def allow(preloads, allowed_preloads) do
+  defp allow(preloads, allowed_preloads) do
     preloads
     |> Keyword.filter(fn {k, _v} -> Keyword.has_key?(allowed_preloads, k) end)
     |> Enum.map(fn {k, v} -> {k, allow(v, allowed_preloads[k])} end)

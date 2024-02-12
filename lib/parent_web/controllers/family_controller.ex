@@ -15,7 +15,7 @@ defmodule ParentWeb.FamilyController do
     ]
 
   def show(conn, %{"id" => id}) do
-    preloads = Preloads.allow(conn, [:children, :parents])
+    preloads = Preloads.from_conn(conn, [:children, :parents])
 
     id
     |> Families.get_family(preloads)
