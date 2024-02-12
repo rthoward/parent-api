@@ -25,8 +25,8 @@ defmodule ParentWeb.Router do
   scope "/api", ParentWeb do
     pipe_through :api
 
-    resources "/children", ChildController
-    resources "/families", FamilyController
+    resources "/children", ChildController, except: [:new, :edit]
+    resources "/families", FamilyController, only: [:show]
   end
 
   scope "/" do
