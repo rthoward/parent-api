@@ -71,7 +71,9 @@ defmodule ParentWeb.ChildControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/children", child: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+
+      assert %{"errors" => %{"first_name" => first_name_errors}} = json_response(conn, 422)
+      assert "can't be blank" in first_name_errors
     end
   end
 
