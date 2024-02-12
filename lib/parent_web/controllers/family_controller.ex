@@ -3,11 +3,19 @@ defmodule ParentWeb.FamilyController do
   use OpenApiSpex.ControllerSpecs
 
   alias Parent.Families
+  alias ParentWeb.Helpers.Preloads
+  alias ParentWeb.FamilySchema
 
   tags ["families"]
 
+  operation :show,
+    summary: "Get a family",
+    responses: [
+      ok: {"Family response", "application/json", FamilySchema.FamilyResponse}
+    ]
+
   def show(conn, %{"id" => id}) do
-    preloads = [:children, :parents]
+    preloads = Preloads.allow(conn, [:children, :parents])
 
     id
     |> Families.get_family(preloads)

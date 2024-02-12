@@ -7,7 +7,7 @@ defmodule ParentWeb.Helpers.Preloads do
 
   @type preloads :: keyword()
 
-  @spec from_conn(Conn.t(), preloads()) :: preloads()
+  @spec from_conn(Conn.t(), atom() | list()) :: preloads()
   def from_conn(conn, allowed) do
     allowed_preloads = normalize(allowed)
 
