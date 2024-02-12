@@ -45,7 +45,7 @@ defmodule ParentWeb.ChildSchema do
       example: %{
         "first_name" => "Ronnie",
         "last_name" => "McDonnie",
-        "birthday" => "1970-01-01T12:34:55Z",
+        "birthday" => "1970-01-01T12:34:55Z"
       }
     })
   end
