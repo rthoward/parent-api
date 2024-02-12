@@ -8,8 +8,6 @@ defmodule ParentWeb.ChildController do
   alias ParentWeb.ChildSchema
   alias ParentWeb.Helpers
 
-  action_fallback ParentWeb.FallbackController
-
   tags ["children"]
 
   @allowed_preloads [family: [:children, :parents]]

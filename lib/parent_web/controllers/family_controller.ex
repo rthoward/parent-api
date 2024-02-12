@@ -4,8 +4,6 @@ defmodule ParentWeb.FamilyController do
 
   alias Parent.Families
 
-  action_fallback ParentWeb.FallbackController
-
   tags ["families"]
 
   def show(conn, %{"id" => id}) do

@@ -45,6 +45,8 @@ defmodule ParentWeb do
       import Plug.Conn
       import ParentWeb.Gettext
 
+      action_fallback ParentWeb.FallbackController
+
       unquote(verified_routes())
     end
   end
