@@ -52,7 +52,8 @@ defmodule Parent.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:ex_machina, "~> 2.7.0"},
-      {:open_api_spex, "~> 3.18"}
+      {:open_api_spex, "~> 3.18"},
+      {:recase, "~> 0.7"}
     ]
   end
 
