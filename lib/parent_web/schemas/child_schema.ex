@@ -11,7 +11,7 @@ defmodule ParentWeb.ChildSchema do
       properties: %{
         id: %Schema{type: :integer},
         first_name: %Schema{type: :string},
-        last_: %Schema{type: :string},
+        last_name: %Schema{type: :string},
         birthday: %Schema{type: :string, format: :date},
         inserted_at: %Schema{type: :string, format: :"date-time"},
         updated_at: %Schema{type: :string, format: :"date-time"}
@@ -32,11 +32,11 @@ defmodule ParentWeb.ChildSchema do
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "Child params",
+      title: "ChildParams",
       type: :object,
       properties: %{
         first_name: %Schema{type: :string},
-        last_: %Schema{type: :string},
+        last_name: %Schema{type: :string},
         birthday: %Schema{type: :string, format: :date},
         inserted_at: %Schema{type: :string, format: :"date-time"},
         updated_at: %Schema{type: :string, format: :"date-time"}
@@ -64,7 +64,7 @@ defmodule ParentWeb.ChildSchema do
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "ChildResponse",
+      title: "ChildrenResponse",
       type: :object,
       properties: %{data: %Schema{type: :array, items: Child}}
     })
