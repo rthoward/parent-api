@@ -29,8 +29,12 @@ defmodule ParentWeb.ConnCase do
       import Phoenix.ConnTest
       import Parent.Factory
       import ParentWeb.ConnCase
+      import ParentWeb.ConnCase, only: [assert_schema: 2]
     end
   end
+
+  def assert_schema(data, resource),
+    do: OpenApiSpex.TestAssertions.assert_schema(data, resource, ParentWeb.ApiSpec.spec())
 
   setup tags do
     Parent.DataCase.setup_sandbox(tags)

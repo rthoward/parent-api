@@ -30,6 +30,13 @@ defmodule ParentWeb.ChildControllerTest do
                |> json_response(200)
     end
 
+    test "matches_schema", %{conn: conn, child: child} do
+      assert conn
+             |> get(~p"/api/children/#{child}")
+             |> json_response(200)
+             |> assert_schema("ChildResponse")
+    end
+
     test "doesn't return family by default", %{conn: conn, child: child} do
       assert response_json =
                conn
